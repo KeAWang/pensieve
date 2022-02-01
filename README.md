@@ -13,6 +13,14 @@
 * `make convert-all` to convert all markdown files to html
 * `make clean` to delete all html files
 
+### Template notes
+
+The template is taken from
+[pandoc-goodies](https://github.com/tajmone/pandoc-goodies/tree/master/templates/html5/github).
+You can see what is possible in markdown
+[here](https://raw.githubusercontent.com/tajmone/pandoc-goodies/master/templates/html5/github/src/PREVIEW.md)
+with the corresponding HTML page [here](https://htmlpreview.github.io/?https://github.com/tajmone/pandoc-goodies/blob/master/templates/html5/github/GitHub-Template-Preview.html).
+
 ### Legend:
 * 🚧(under construction)
 
