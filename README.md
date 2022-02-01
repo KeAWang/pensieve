@@ -1,4 +1,4 @@
-# pensieve 
+# [pensieve](https://keawang.github.io/pensieve/)
 
 Markdown notes on things I've learned and don't want to forget
 
