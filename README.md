@@ -1,6 +1,15 @@
-# [pensieve](https://keawang.github.io/pensieve/)
+<div align="center">
+  <a href="https://keawang.github.io/pensieve/">
+    <img src="images/lights-veil.jpg" alt="Pensieve logo" width="339", height="226">
+  </a>
 
-Markdown notes on things I've learned and don't want to forget
+<h3 align="center">pensieve</h3>
+
+  <p align="center">
+    Self-contained notes on things I've learned and don't want to forget
+  </p>
+</div>
+
 
 ### Build instructions:
 
