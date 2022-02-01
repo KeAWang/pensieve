@@ -340,7 +340,7 @@ MathJax = {
 \newcommand{\var}[2][]{\operatorname{Var}_{#1} \braks{#2}}
 \newcommand{\cov}[2]{\operatorname{Cov}\parens*{#1, #2}}
 \newcommand{\prob}[2][]{\mathbb{P}_{#1}\left(#2\right)}
-\newcommand{\ind}[1]{\mathbbm{1}_{\left[ #1\right]}} % requires bbm package
+\newcommand{\ind}[1]{\mathbb{1}_{\left[ #1\right]}} % requires bbm package
 
 \DeclareMathOperator{\Binom}{Binom}
 \newcommand{\Normal}[1]{\operatorname{Normal}\parens*{#1}}
