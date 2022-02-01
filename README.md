@@ -1,10 +1,6 @@
-<h1 align="center">pensieve</h1>
+# [pensieve](https://keawang.github.io/pensieve/)
 
 <div align="center">
-  <a href="https://keawang.github.io/pensieve/">
-    <img src="images/lights-veil.jpg" alt="Pensieve logo" width="339", height="226">
-  </a>
-
   <p align="center">
     Self-contained notes on things I've learned and don't want to forget
   </p>
