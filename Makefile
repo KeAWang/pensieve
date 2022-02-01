@@ -14,7 +14,7 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # COMMANDS                                                                      #
 #################################################################################
 
-convert:
+convert-all:
 	ls machine-learning/*.md | xargs $(PROJECT_DIR)/md_to_html.sh
 
 
