@@ -2,7 +2,13 @@
 
 Markdown notes on things I've learned and don't want to forget
 
-Legend:
+### Build instructions:
+
+* `./md_to_html.sh path/to/markdown-file.md` to convert a markdown file to html
+* `make convert-all` to convert all markdown files to html
+* `make clean` to delete all html files
+
+### Legend:
 * 🚧(under construction)
 
 ## Machine Learning
