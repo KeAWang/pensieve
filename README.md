@@ -2,7 +2,7 @@
 
 <div align="center">
   <p align="center">
-    Self-contained notes on things I've learned and don't want to forget
+    Self-contained notes on things I've learned and don't want to forget. No guarantees on correctness.
   </p>
 </div>
 
