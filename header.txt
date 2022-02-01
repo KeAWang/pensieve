@@ -1,5 +1,13 @@
-% Made for MathJax
+<script>
+MathJax = {
+  tex: {
+    tags: 'ams',
+  },
+};
+</script>
 
+\[
+% For MathJax
 
 %mathbf letters for matrices/vectors
 \renewcommand{\vec}[1]{\mathbf{#1}}
@@ -375,3 +383,4 @@
 \newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}
 \newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
 \newcommand{\Bmat}[1]{\begin{Bmatrix} #1 \end{Bmatrix}}
+\]

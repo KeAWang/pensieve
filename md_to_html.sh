@@ -7,10 +7,12 @@ do
     
     parent_dir="$(dirname "$filepath")"
     
+        #-H <(echo '\['; cat ./alex-macros.tex; echo '\]') \
     pandoc $filepath \
-        -H <(echo '\['; cat ./alex-macros.tex; echo '\]') \
         --mathjax \
+        -H header.txt \
         --standalone \
+        --toc \
         -o "$parent_dir"/"$filename".html \
         -f markdown+tex_math_single_backslash
 done
