@@ -2,6 +2,7 @@
 title: Causality
 author: Ke Alexander Wang
 toc-title: Contents
+summary: "**tl;dr**: You can't observe counterfactual potential outcomes, but you can estimate it"
 
 ---
 
