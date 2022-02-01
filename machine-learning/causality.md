@@ -1,6 +1,7 @@
 ---
 title: Causality
 author: Ke Alexander Wang
+toc-title: Contents
 
 ---
 
@@ -84,3 +85,4 @@ Thus we can estimate the average treatment effect from \(N\) observations as fol
 3. Estimate the average treatment effect by a weighted average across the strata: \(\hat \tau = \sum_{s=1}^S \frac{N_s}{N} \hat \tau_s\)
 
 ## Counterfactual inference and off policy batch RL
+
