@@ -26,4 +26,8 @@ with the corresponding HTML page [here](https://htmlpreview.github.io/?https://g
 
 ## Machine Learning
 
-* 🚧[Causality](machine-learning/causality.html)
+* 🚧[Causality](content/machine-learning/causality.html)
+
+## Programming
+
+* [Advanced masking, filling, selecting, and indexing PyTorch tensors](content/misc/advanced-torch-tensors.html)
