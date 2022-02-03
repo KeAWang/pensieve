@@ -132,6 +132,29 @@ $summary$
 $endif$
 $-------------------------------------------------------------------------------
 </header>
+$elseif(jupyter.title)$
+<header>
+<h1 class="title$if(jupyter.subtitle)$ followed-by-subtitle$endif$">$jupyter.title$</h1>
+$---------------------------------------------------------------------> subtitle
+$if(jupyter.subtitle)$
+<p class="subtitle">$jupyter.subtitle$</p>
+$endif$
+$-----------------------------------------------------------------------> author
+$for(jupyter.author)$
+<p class="author">$jupyter.author$</p>
+$endfor$
+$-------------------------------------------------------------------------> date
+$if(juptyer.date)$
+<p class="date">$jupyter.date$</p>
+$endif$
+$----------------------------------------------------------------------> summary
+$if(jupyter.summary)$
+<div class="summary">
+$jupyter.summary$
+</div>
+$endif$
+$-------------------------------------------------------------------------------
+</header>
 $endif$
 $--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< END IF: title
 $--------------------------------------------------------------------------> toc

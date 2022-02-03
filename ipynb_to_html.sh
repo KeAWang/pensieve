@@ -9,12 +9,9 @@ do
     
         #-H <(echo '\['; cat ./alex-macros.tex; echo '\]') \
     pandoc $filepath \
-        --mathjax \
-        -H header.txt \
         --standalone \
         --toc \
         --template=template.html \
         -M toc-title="Contents" \
-        -o "$parent_dir"/"$filename".html \
-        -f markdown+tex_math_single_backslash
+        -o "$parent_dir"/"$filename".html
 done

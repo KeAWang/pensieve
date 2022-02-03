@@ -14,8 +14,11 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # COMMANDS                                                                      #
 #################################################################################
 
-convert-all:
-	ls machine-learning/*.md | xargs $(PROJECT_DIR)/md_to_html.sh
+convert-ipynb:
+	ls pensieve/*/*.ipynb | xargs $(PROJECT_DIR)/ipynb_to_html.sh
+
+convert-md:
+	ls pensieve/*/*.md | xargs $(PROJECT_DIR)/md_to_html.sh
 
 
 # Delete all HTML files
