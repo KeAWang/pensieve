@@ -448,12 +448,37 @@ p.author {
     font-size: 1em
 }
 
-.output.execute_result {
-    background-color: #f2f3f5
+.output {
+    background-color: #f2f3f5;
+    color: #959da5
+}
+
+.output::before {
+    font-size: 70%;
+    font-family: inherit;
+    padding-left: 1%;
+    color: black;
+}
+
+.output.stream.stdout::before {
+    content: "stdout"
+}
+
+.outpue.stream.err::before {
+    content: "stderr"
 }
 
 .output.execute_result::before {
-    content: "Output";
+    content: "Cell output"
+}
+
+div.sourceCode {
+    background-color: #ebebeb;
+    overflow: visible;
+}
+
+div.sourceCode::before {
+    content: "Cell input";
     font-size: 70%;
     font-family: inherit;
     padding-left: 1%;
