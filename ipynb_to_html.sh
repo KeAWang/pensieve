@@ -13,5 +13,6 @@ do
         --toc \
         --template=template.html \
         -M toc-title="Contents" \
-        -o "$parent_dir"/"$filename".html
+        -o "$parent_dir"/"$filename".html \
+        -c "../../stylesheet.css"
 done

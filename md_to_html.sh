@@ -16,5 +16,6 @@ do
         --template=template.html \
         -M toc-title="Contents" \
         -o "$parent_dir"/"$filename".html \
-        -f markdown+tex_math_single_backslash
+        -f markdown+tex_math_single_backslash \
+        -c "../../stylesheet.css"
 done
