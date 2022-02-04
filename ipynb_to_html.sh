@@ -6,6 +6,7 @@ do
     filename="${filename%.*}"
     
     parent_dir="$(dirname "$filepath")"
+    parent_dir="${parent_dir#source/}"
     
         #-H <(echo '\['; cat ./alex-macros.tex; echo '\]') \
     pandoc $filepath \
@@ -13,6 +14,6 @@ do
         --toc \
         --template=template.html \
         -M toc-title="Contents" \
-        -o "$parent_dir"/"$filename".html \
+        -o content/"$parent_dir"/"$filename".html \
         -c "../../stylesheet.css"
 done
