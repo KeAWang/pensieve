@@ -15,5 +15,6 @@ do
         --template=template.html \
         -M toc-title="Contents" \
         -o content/"$parent_dir"/"$filename".html \
-        -c "../../stylesheet.css"
+        -c "../../stylesheet.css" \
+        --extract-media=content/"$parent_dir"
 done
