@@ -31,3 +31,6 @@ with the corresponding HTML page [here](https://htmlpreview.github.io/?https://g
 ## Programming
 
 * [Advanced masking, filling, selecting, and indexing PyTorch tensors](content/misc/advanced-torch-tensors.html)
+
+
+TODO: write a pandoc filter to allow html files to point to /pensieve/MEDIA_DIR instead of MEDIA_DIR
