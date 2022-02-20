@@ -15,10 +15,10 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 #################################################################################
 
 convert-ipynb:
-	ls content/*/*.ipynb | xargs $(PROJECT_DIR)/ipynb_to_html.sh
+	ls source/*/*.ipynb | xargs $(PROJECT_DIR)/ipynb_to_html.sh
 
 convert-md:
-	ls content/*/*.md | xargs $(PROJECT_DIR)/md_to_html.sh
+	ls source/*/*.md | xargs $(PROJECT_DIR)/md_to_html.sh
 
 
 # Delete all HTML files
