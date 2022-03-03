@@ -42,7 +42,7 @@ SOFTWARE.
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Ke Alexander Wang" />
-  <title>Causality</title>
+  <title>Graphical Models</title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="../../stylesheet.css">
   <script>
@@ -446,138 +446,142 @@ SOFTWARE.
 <body>
 <article class="markdown-body">
 <header>
-<h1 class="title">Causality</h1>
+<h1 class="title">Graphical Models</h1>
 <p class="author">Ke Alexander Wang</p>
-<div class="summary">
-<strong>tl;dr</strong>: You can’t observe counterfactual potential
-outcomes, but you can estimate it
-</div>
 </header>
 <hr>
 <nav id="TOC">
 <h1 class="toc-title">Contents</h1>
 <ul>
-<li><a href="#potential-outcomes-framework">Potential outcomes
-framework</a>
+<li><a href="#bayesian-networks">Bayesian networks</a>
 <ul>
-<li><a href="#average-treatment-effect">Average treatment
-effect</a></li>
+<li><a href="#explaining-away">Explaining away</a></li>
+<li><a href="#d-separation">d-separation</a></li>
+<li><a href="#parameter-estimation">Parameter estimation</a></li>
 </ul></li>
-<li><a href="#propensity-score-matching">Propensity score
-matching</a></li>
+<li><a href="#markov-networks">Markov networks</a>
+<ul>
+<li><a href="#partition-function">Partition function</a></li>
+<li><a href="#parameter-estimation-1">Parameter estimation</a></li>
+</ul></li>
+<li><a href="#loopy-belief-propagation">Loopy belief
+propagation</a></li>
+<li><a href="#bethe-free-energy">Bethe free energy</a></li>
+<li><a href="#mean-field-variational-inference">Mean-field variational
+inference</a></li>
+<li><a href="#sampling">Sampling</a>
+<ul>
+<li><a href="#monte-carlo-integration">Monte Carlo integration</a></li>
+<li><a href="#gibbs-sampling">Gibbs sampling</a></li>
 <li><a
-href="#counterfactual-inference-and-off-policy-batch-rl">Counterfactual
-inference and off policy batch RL</a></li>
+href="#metropolis-hastings-and-detailed-balance">Metropolis-Hastings and
+detailed balance</a></li>
+</ul></li>
+<li><a href="#sequential-monte-carlo">Sequential Monte Carlo</a></li>
+<li><a href="#chow-liu-trees">Chow-Liu trees</a></li>
 </ul>
 </nav>
 <hr>
-<h2 id="potential-outcomes-framework">Potential outcomes framework</h2>
-<p>The potential outcomes framework is also known as the Neyman-Rubin
-causal model. It is the most common causal framework for causal
-inference in social sciences.</p>
-<p>Setup:</p>
-<ul>
-<li>We have a <em>binary treatment</em> random variable <span
-class="math inline">\(\trv\)</span>, e.g. to treat a patient or not to
-treat a patient.</li>
-<li>Each treatment has an associated <em>potential outcome</em> random
-variable, either <span class="math inline">\(\yrv(1)\)</span> or <span
-class="math inline">\(\yrv(0)\)</span>.</li>
-<li>We wish to estimate the <em>causal effect</em> of the treatment on
-the individual, <span class="math display">\[\Delta = \yrv(1) -
-\yrv(0)\]</span>.</li>
-</ul>
-<p>It is important to note that both <span
-class="math inline">\(\yrv(1)\)</span> and <span
-class="math inline">\(\yrv(0)\)</span> are marginal random variables.
-<span class="math inline">\(\yrv(w)\)</span> is the distribution of
-outcomes after applying treatment <span
-class="math inline">\(w\)</span>, including both observable outcomes
-<em>and</em> counterfactual outcomes. In other words, <span
-class="math inline">\(\yrv(w) = \yrv(w)\trv + \yrv(w)(1 -
-\trv)\)</span>. See <a href="https://arxiv.org/abs/1907.01672">Causal
-models on probability spaces</a> for a clear visualization of potential
-outcomes and treatmentas random variables.</p>
-<h3 id="average-treatment-effect">Average treatment effect</h3>
-<p>Since for any particular individual, we can only apply either
-treatment 1 or 0, we cannot observe the causal effect on an individual
-directly. Instead, we can use randomized experiments to estimate the
-<em>average treatment effect</em> <span
-class="math display">\[\begin{equation}
-\tau = \ev{\yrv(1) - \yrv(0)}.
-\end{equation}\]</span></p>
-<p>Suppose that we observe <span class="math inline">\(n\)</span> i.i.d.
-samples of <span class="math inline">\(\{\yrv, \trv\}\)</span> with
-<span class="math inline">\(n_1\)</span> treated and <span
-class="math inline">\(n_0 = n - n_1\)</span> untreated patients. Note
-that here <span class="math inline">\(\yrv\)</span> is the random
-variable of observed outcomes, which is different from <span
-class="math inline">\(\yrv(w)\)</span> from before. A way to think about
-<span class="math inline">\(\yrv\)</span> is by writing it as <span
-class="math display">\[\begin{equation}
-\yrv = \yrv(1)\trv + \yrv(0) (1 - \trv).
-\end{equation}\]</span> We assume</p>
-<ul>
-<li><span class="math inline">\(\yrv \ind{\tau = t} = \yrv(t) \ind{\tau
-= t}\)</span></li>
-<li><span class="math inline">\((\yrv(1), \yrv(0)) \perp \trv\)</span>,
-that treatment is randomized so that both the treated population and the
-untreated population have the same distribution of people.</li>
-</ul>
-<p>Then we have <span class="math display">\[\begin{align}
-\ev{\frac{1}{n_t} \sum_{i:\ \trv = t} \yrv_i} &amp;= \ev{\yrv \mid \trv
-= t} &amp;\\
-    &amp;= \ev{\yrv(t) \mid \trv = t} &amp; \text{by first assumption}\\
-    &amp;= \ev{\yrv(t)} &amp; \text{by randomization}.
-\end{align}\]</span> Thus under the above assumptions, we can estimate
-the average treatment effect via the difference in means estimator <span
-class="math display">\[\begin{equation}
-\hat \tau = \frac{1}{n_1} \sum_{i:\ \trv = 1} \yrv_i - \frac{1}{n_0}
-\sum_{i:\ \trv = 0} \yrv_i.
-\end{equation}\]</span></p>
-<h2 id="propensity-score-matching">Propensity score matching</h2>
-<p>Suppose each patient also has a covariate <span
-class="math inline">\(\xrv\)</span>, e.g. age. The <em>propensity
-score</em> is the probability of treatment given the covariate value:
-<span class="math display">\[\begin{equation}
-e(x) := \prob{\trv = 1 \mid \xrv = x}.
-\end{equation}\]</span> We can estimate the propensity score using
-parameteric estimators like logistic regression on the dataset to arrive
-at an estimate <span class="math inline">\(\hat e\)</span>.</p>
-<p>When randomized experiments are not available, we can try to account
-for confounding by using the estimated propensity scores.</p>
-<p>Assume:</p>
-<ul>
-<li><span class="math inline">\((\yrv(1), \yrv(0)) \perp \trv \mid
-e(X)\)</span>, that we choose the right covariate to capture any
-dependence bewteen <span class="math inline">\(\trv\)</span> and the
-potential outcomes. Then we have <span
-class="math display">\[\begin{align}
-\ev{\yrv \mid \trv = \tau} &amp;= \ev{ \ev{\yrv \mid \trv=\tau, e(X)} }
-\\
-  &amp;= \ev{ \ev{\yrv(\tau) \mid \trv=\tau, e(X)}} \\
-  &amp;= \ev{ \ev{\yrv(\tau) \mid  e(X)} } \\
-  &amp;= \ev{\yrv(\tau)}.
-\end{align}\]</span> From this, we see that <span
-class="math display">\[\begin{equation}
-\ev{ \ev{\yrv \mid \trv=\tau, e(X)} } = \ev{\yrv(\tau)},
-\end{equation}\]</span> allowing us to estimate the average treatment
-effect by averaging over groups with different propensity scores.</li>
-</ul>
-<p>Thus we can estimate the average treatment effect from <span
-class="math inline">\(N\)</span> observations as follows:</p>
+<h2 id="bayesian-networks">Bayesian networks</h2>
+<p>A Bayesian network is a directed graph <span
+class="math inline">\(G\)</span> that represents the factorization of a
+probability distribution <span class="math inline">\(p\)</span> into
+conditional probability distributions. The direction of the edges encode
+our assumption about how samples are generated in <span
+class="math inline">\(p\)</span>.</p>
+<h3 id="explaining-away">Explaining away</h3>
+<p>Explaining-away is mnemonic for the common effect situation. Both a
+flat tire and a napping driver will cause a car to be stopped on the
+side of the road as a common effect. A priori, if we don’t observe
+anything about the car, then the two causes are independent. However,
+once we observe that the car is stopped, the two become dependent.
+Knowing that the driver is napping tells us that the tire is likely not
+flat, and vice versa.</p>
+<h3 id="d-separation">d-separation</h3>
+<p>Two sets of nodes <span class="math inline">\(X, Y\)</span> in a
+directed graph are d-connected conditioned on a set of nodes <span
+class="math inline">\(Z\)</span> if there exists an undirected path
+<span class="math inline">\(\Pcal\)</span> between a node in <span
+class="math inline">\(X\)</span> and a node in <span
+class="math inline">\(Y\)</span> such that</p>
 <ol type="1">
-<li>Group the observation by ther estimated propensity score into <span
-class="math inline">\(S\)</span> stata, each with <span
-class="math inline">\(N_s\)</span> observations</li>
-<li>Estimate the average treatment effect within each strata: <span
-class="math inline">\(\hat \tau_s\)</span></li>
-<li>Estimate the average treatment effect by a weighted average across
-the strata: <span class="math inline">\(\hat \tau = \sum_{s=1}^S
-\frac{N_s}{N} \hat \tau_s\)</span></li>
+<li>for any vertex <span class="math inline">\(v\)</span> along <span
+class="math inline">\(\Pcal\)</span> that is a v-structure, either <span
+class="math inline">\(v \in Z\)</span> or one of its directed
+descendents is in <span class="math inline">\(Z\)</span></li>
+<li>for every vertex <span class="math inline">\(v\)</span> along <span
+class="math inline">\(\Pcal\)</span> that is not a v-structure, <span
+class="math inline">\(v\)</span> is not in <span
+class="math inline">\(Z\)</span></li>
 </ol>
-<h2 id="counterfactual-inference-and-off-policy-batch-rl">Counterfactual
-inference and off policy batch RL</h2>
+<p>We say that <span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> are d-separated by <span
+class="math inline">\(Z\)</span> if <span
+class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> are not d-connected.</p>
+<p>If <span class="math inline">\(X, Y\)</span> are d-separated by <span
+class="math inline">\(Z\)</span>, then <span class="math inline">\(X
+\perp Y \mid Z\)</span>. However, the converse is not necessarily
+true.</p>
+<h3 id="parameter-estimation">Parameter estimation</h3>
+<p>Maximum-likelihood is the most common way of parameter estimation,
+i.e. learning the parameters of the distributions we used to model the
+data. Given a set of observations <span class="math inline">\(x_1,
+\ldots, x_N\)</span>, we maximize the likelihood <span
+class="math inline">\(\log p(x_1, \ldots, x_N) = \sum_{i=1}^N \log
+p(x_i)\)</span>.</p>
+<h2 id="markov-networks">Markov networks</h2>
+<p>A Markov network, also known as a Markov random field, is an
+undirected graphical model where the random variables are partitioned
+into cliques, where each clique has a potential function, or factor,
+that is a function of the variables in the clique. Each clique is
+interpreted as a specification of which variables interact with each
+other.</p>
+<h3 id="partition-function">Partition function</h3>
+<p>A MRF over <span class="math inline">\(x_1, \ldots, x_N\)</span> is
+defined by <span class="math display">\[\begin{equation}
+p(x_1, \ldots, x_N) = \frac{1}{Z} \prod_{c\in C} \phi_c(X_c)
+\end{equation}\]</span> where each <span
+class="math inline">\(c\)</span> is a clique and <span
+class="math inline">\(X_c\)</span> is the list of variables in clique
+<span class="math inline">\(c\)</span>.</p>
+<p><span class="math inline">\(Z\)</span> is the partition function, or
+normalizing constant <span class="math display">\[\begin{equation}
+Z = \sum_{x_1, \ldots, x_N} \prod_{c\in C} \phi_c(X_c).
+\end{equation}\]</span></p>
+<h3 id="parameter-estimation-1">Parameter estimation</h3>
+<h2 id="loopy-belief-propagation">Loopy belief propagation</h2>
+<h2 id="bethe-free-energy">Bethe free energy</h2>
+<h2 id="mean-field-variational-inference">Mean-field variational
+inference</h2>
+<p>Mean-field VI assumes that the variational posterior <span
+class="math inline">\(q\)</span> factorizes: <span
+class="math display">\[q(z_1, \ldots, z_D) = \prod_{i=1}^D
+q_i(z_i)\]</span> and represents one extreme simplifying assumption. You
+can also assume that it factorizes according to groups of variables, an
+approach known as structured mean-field.</p>
+<p>This assumption allows one to derive coordinate ascent variational
+inference (CAVI), which optimizes the evidence lower bound (ELBO) by
+iteratively updating the variational parameters of each factor <span
+class="math inline">\(q_i\)</span>.</p>
+<p>The derivation is short: <span class="math display">\[\begin{align}
+\text{ELBO}(q) &amp;= \ev[q]{\log p(x, z) - \log q(z)} \\
+&amp;= \ev[q_i]{\ev[q_{\neg i}]{\log p(x, z_{\neg i}, z_i)}} -
+\ev[q_i]{\log q_i(z_i)} + \constant \\
+&amp;= \kldiv{q_i}{\constant \cdot \exp{\ev[q_{\neg i}]{\log p(x,
+z_{\neg i}, z_i)}}}
+\end{align}\]</span> which is maximized with respect to <span
+class="math inline">\(q_i\)</span> when <span
+class="math display">\[\begin{equation}
+q_i^*(z_i) \propto \exp{\ev[q_{\neg i}]{\log p(x, z_{\neg i}, z_i)}}.
+\end{equation}\]</span></p>
+<h2 id="sampling">Sampling</h2>
+<h3 id="monte-carlo-integration">Monte Carlo integration</h3>
+<h3 id="gibbs-sampling">Gibbs sampling</h3>
+<h3 id="metropolis-hastings-and-detailed-balance">Metropolis-Hastings
+and detailed balance</h3>
+<h2 id="sequential-monte-carlo">Sequential Monte Carlo</h2>
+<h2 id="chow-liu-trees">Chow-Liu trees</h2>
 </article>
 <script src="https://giscus.app/client.js"
         data-repo="KeAWang/pensieve"
